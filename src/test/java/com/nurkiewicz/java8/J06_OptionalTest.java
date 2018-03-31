@@ -4,6 +4,7 @@ import com.nurkiewicz.java8.people.Person;
 import org.junit.Ignore;
 import org.junit.Test;
 
+import javax.swing.text.html.Option;
 import java.time.LocalDate;
 import java.time.Month;
 import java.util.Optional;
@@ -74,11 +75,12 @@ public class J06_OptionalTest {
 		return Optional.ofNullable(lookupAddressOrNull(person));
 	}
 
-	/**
-	 * TODO: Copy and refactor code from {@link #lookupAddressByIdOrNull}, but avoid nulls
-	 */
 	private Optional<String> tryLookupAddressById(int id) {
-		return Optional.empty(); // tryFindPerson(id).
+		return tryFindPerson(id)
+				.filter(p -> p.getSex() == MALE)
+				.flatMap(this::tryLookupAddress)
+				.filter(s -> !s.isEmpty())
+				.map(String::trim);
 	}
 
 	@Test
